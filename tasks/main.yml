@@ -5,6 +5,7 @@
     state=latest
   with_items:
     - jmeter
+    - default-jdk
 
 - name: download JMeter Plugin
   get_url: url=http://jmeter-plugins.org/downloads/file/JMeterPlugins-Standard-1.2.0.zip dest=/tmp/JMeterPlugins-Standard-1.2.0.zip
@@ -17,4 +18,12 @@
 - name: Copy lib to JMeter path
   command: cp /tmp/jmeter/lib/ext/JMeterPlugins-Standard.jar {{ jmeter_app_path }}/lib/ext/
 
+- name: download ServerAgent
+  get_url: url=http://jmeter-plugins.org/downloads/file/ServerAgent-2.2.1.zip dest=/tmp/ServerAgent-2.2.1.zip
+- name: Remove existing extraction directory is present
+  file: path=/usr/share/jmeter/agent state=absent
+- name: Create an extraction dir
+  file: path=/usr/share/jmeter/agent state=directory
+- name: extract Agent
+  command: unzip ServerAgent-2.2.1.zip -d /usr/share/jmeter/agent/ chdir=/tmp
 
