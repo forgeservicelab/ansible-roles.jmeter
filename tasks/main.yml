@@ -1,0 +1,20 @@
+---
+- name: Install required packages
+  apt:
+    pkg={{ item }}
+    state=latest
+  with_items:
+    - jmeter
+
+- name: download JMeter Plugin
+  get_url: url=http://jmeter-plugins.org/downloads/file/JMeterPlugins-Standard-1.2.0.zip dest=/tmp/JMeterPlugins-Standard-1.2.0.zip
+- name: Remove existing extraction directory is present
+  file: path=/tmp/jmeter state=absent
+- name: Create an extraction dir
+  file: path=/tmp/jmeter state=directory
+- name: extract zip
+  command: unzip JMeterPlugins-Standard-1.2.0.zip -d jmeter/ chdir=/tmp
+- name: Copy lib to JMeter path
+  command: cp /tmp/jmeter/lib/ext/JMeterPlugins-Standard.jar {{ jmeter_app_path }}/lib/ext/
+
+
